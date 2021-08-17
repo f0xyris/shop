@@ -1,0 +1,28 @@
+.menuItem {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    padding: 1em 0;
+    filter: grayscale(1);
+    cursor: pointer;
+}
+.menuItem:hover {
+    filter: grayscale(0);
+    transition: .3s ease;
+}
+.menuItem:hover > span {
+    color: #ee6344;
+    transition: .3s ease;
+}
+.menuItem > img {
+    width: 2vw;
+    height: 2vw;
+}
+
+.menuItem > span {
+    color: rgba(0,0,0,.64);
+    text-transform: capitalize;
+    font-weight: bold;
+    font-size: 14px;
+}

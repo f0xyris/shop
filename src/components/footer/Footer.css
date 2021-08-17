@@ -1,0 +1,81 @@
+.footer {
+    padding: 5em 5em 2em 7em;
+    display: flex;
+    justify-content: space-between;
+    width: 79vw;
+    font-family: 'AvenirDemi-Regular';
+    font-weight: 400;
+}
+
+.footer__nav .nav__items {
+    flex-direction: column;
+    font-family: 'AvenirDemi';
+    gap: 3px;
+}
+
+.footer__nav .nav__items > li {
+    padding: 0;
+}
+.footer span {
+    font-size: 14px;
+    font-family: 'AvenirDemi-Regular';
+    font-weight: 400;
+    color: rgba(0,0,0,.4);
+    line-height: 1.43;
+    margin-bottom: 1em;
+}
+
+.footer__info {
+    display: flex;
+    flex-direction: column;
+    gap: 2em;
+    max-width: 200px;
+}
+
+.footer__info > h5 {
+    color: rgba(0,0,0,.64);
+    font-size: 14px
+}
+
+.footer__nav .nav {
+    height: auto;
+    margin-top: 1em;
+}
+
+.footer__nav .nav__items > li:after {
+    content: none;
+}
+
+.footer__checkout {
+    display: flex;
+    flex-direction: column;
+}
+
+.footer__checkout a {
+    text-decoration: none;
+    line-height: 24px;
+    margin-bottom: 8px;
+    color: rgba(0,0,0,.64);
+    transition: .3s ease;
+    font-family: 'AvenirDemi';
+    font-size: 14px;
+}
+
+.footer__checkout a:hover {
+    color: #ee6344;
+}
+
+.footer__work {
+    display: flex;
+    flex-direction: column;
+}
+
+.footer__work p {
+    line-height: 28px;
+    margin-top: 8px;
+    color: rgba(0,0,0,.64);
+    font-size: 14px;
+    font-family: 'AvenirDemi';
+    padding: 0;
+    margin: 0;
+}

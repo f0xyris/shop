@@ -1,0 +1,30 @@
+.cats {
+    border-right: 1px solid rgba(0,0,0,.08);
+    padding: 0 1.2vw;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    height: 100vh;
+    position: fixed;
+    width: 4vw;
+    overflow: hidden;
+    transition: width .3s ease;
+    z-index: 13;
+    background-color: #fff;
+    padding-top: 80px;
+}
+
+.cats:hover {
+    width: 13em;
+    transition: width .3s ease;
+}
+
+.cats:hover ~ .home__content,
+.cats:hover ~ .home__content .slide__image {
+    background: #0000006b;
+    transition: .5s ease;
+}
+
+.cats:hover ~ .home__content {
+    z-index: 12;
+}

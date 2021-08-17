@@ -1,0 +1,39 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'AvenirDemi';
+    font-weight: 700;
+    align-items: center;
+    padding: 0 1rem;
+    border-bottom: 1px solid rgba(0,0,0,.08);
+    position: fixed;
+    z-index: 14;
+    background-color: #fff;
+    color: rgba(0,0,0,.64);
+    height: 68px;
+}
+
+.header__logo {
+    display: flex;
+    object-fit: contain;
+    cursor: pointer;
+    
+}  
+
+
+.header__right {
+    display: flex;
+    justify-content: space-around;
+    gap: 2em;
+}
+.header__favorites,
+.header__login {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+.header__favorites > img,
+.header__login > img {
+    margin-right: 1em;
+}
+

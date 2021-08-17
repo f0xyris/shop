@@ -1,0 +1,229 @@
+.productItems {
+    position: relative;
+    margin-top: 5em;
+}
+.productItems__image {
+    width: 100%;
+    padding: 0 8px;
+    height: 100%;
+    max-height: 200px;
+    display: flex;
+    position: relative;
+}
+.productItems__image > img {
+    max-width: 280px;
+    object-fit: cover;
+    width: 100%;
+}
+
+.productItems__item {
+    max-width: 300px;
+    margin-right: 24px;
+    width: 100%;
+    height: 100%;
+    padding-bottom: 24px;
+    display: flex !important;
+    flex-direction: column;
+    position: relative;
+    flex: 1;
+    border-radius: 4px;
+    transition: box-shadow .3s ease;
+    flex-direction: column;
+}
+.productItems__item:hover {
+    box-shadow: 0 2px 40px 0 rgb(0 0 0 / 12%);
+    z-index: 2;
+    cursor: pointer;
+}
+.productItems__cart > h4 {
+    font-size: 1.5em;
+    font-family: 'AvenirDemi-Regular';
+}
+.productItems__desc > h5 {
+    font-weight: 400;
+    font-family: 'AvenirDemi-Regular';
+    font-size: 1em;
+}
+
+.productItems__desc > h5 > span {
+    color: #ee6344;
+    font-family: 'AvenirDemi';
+}
+
+.productItems__cart {
+    padding: 0 16px;
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+}
+
+.productItems__order {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 15px;
+}
+
+.productItems__order .button {
+    margin-top: 0;
+}
+
+.productItems__desc {
+    margin-top: 12px;
+    transition: .3s ease;
+    text-transform: lowercase;
+    flex: 1;
+}
+
+.productItems__order > span {
+    font-size: 1.4em;
+}
+
+.productItems__order > span > small {
+    font-family: 'AvenirDemi-Regular';
+    font-weight: 400;
+}
+
+.productItems__fav span {
+    left: 16px;
+    bottom: 16px;
+    width: 28px;
+    height: 28px;
+    cursor: pointer;
+    position: absolute;
+}
+
+.productItems__fav i {
+    border-radius: 100%;
+    border: 2px solid rgba(238,99,68,.48);
+    font-size: 17px;
+    color: #ee6344;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: .3s ease;
+    background-color: #fff;
+    width: 100%;
+    height: 100%;
+}
+.productItems__fav i.active {
+    border: 2px solid #ee6344;
+    background-color: #ee6344;
+    color: #fff;
+}
+.productItems__fav i:hover {
+    border: 2px solid #ee6344;
+}
+
+.productItems__fav i:before {
+    font-weight: bold;
+}
+
+.productItems__eco {
+    position: absolute;
+    right: 16px;
+    bottom: 11px;
+    font-size: 21px;
+    color: #84c502;
+}
+
+.productItems__spicy {
+    position: absolute;
+    right: 16px;
+    bottom: 11px;
+    color: #ee6344;
+    font-size: 21px;
+}
+
+.productItems__wrapper {
+    display: flex;
+    justify-content: space-between;
+}
+
+.productItems__nav {
+    display: flex;
+    justify-content: space-between;
+    flex: 0.3;
+    margin-right: 2em;
+    align-items: center;
+}
+.productItems__nav .button {
+    margin-top: 0;
+}
+
+.productItems > h2 {
+    text-transform: capitalize;
+}
+
+.productItems__nav i {
+    color: rgba(0,0,0,.16);
+    font-size: 2em;
+    cursor: pointer;
+}
+
+.productItems__nav > span {
+    font-size: 1.5em;
+    font-family: 'AvenirDemi-Regular';
+    letter-spacing: 5px;
+}
+
+.slick-slide > div {
+    margin-right: 24px;
+    height: 100%;
+}
+
+.slick-track {
+    margin-top: 3.5%;
+    width: 100%;
+    height: 450px;
+    margin: 0 auto;
+    z-index: 1;
+    padding: 1em 0;
+    display: flex;
+}
+
+.slick-slide {
+    width: 100%;
+    /* max-width: 280px; */
+    padding-bottom: 24px;
+    background-color: #fff;
+    transition: box-shadow .3s ease;
+    position: relative;
+    z-index: 0;
+    border-radius: 4px;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    height: 450px;
+}
+.slick-slider {
+    position: initial;
+}
+.slick-arrow {
+    position: absolute;
+}
+
+.slick-prev {
+    top: 5%;
+    right: 11rem;
+    left: auto;
+}
+
+.slick-next {
+    top: 5%;
+    right: 2rem;
+    left: auto; 
+}
+
+.slick-next:before, .slick-prev:before {
+    color: #000;
+    font-size: 30px;
+}
+
+.productItems > .button {
+    position: absolute;
+    right: 4rem;
+    top: 1.5%;
+    margin-top: 0;
+}
