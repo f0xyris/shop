@@ -10,7 +10,7 @@ function Nav() {
     return (
         <div className="nav">
             <ul className="nav__items">
-                <li onClick={() => history("/")}>Home</li>
+                <li onClick={() => history("/shop")}>Home</li>
                 <li onClick={() => history("/menu")}>Menu</li>
                 <li onClick={() => history("/delivery")}>Delivery</li>
                 <li onClick={() => history("/customers")}>For customers</li>

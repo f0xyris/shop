@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/shop/static/css/main.2040154c.css",
-    "main.js": "/shop/static/js/main.11b8edbe.js",
+    "main.js": "/shop/static/js/main.a8c37844.js",
     "static/media/cat6.png": "/shop/static/media/cat6.ebf0e6d7353125d291bc.png",
     "static/media/ibm.jpg": "/shop/static/media/ibm.c996c116cf32e3d8fd1e.jpg",
     "static/media/cat3.png": "/shop/static/media/cat3.b241ac3347dfe5b57546.png",
@@ -28,10 +28,10 @@
     "static/media/roll.svg": "/shop/static/media/roll.79f9f6ddd7fd983604ba2521b1665ed8.svg",
     "static/media/people.svg": "/shop/static/media/people.9bd33dfadb9ca1ceca68697c12a2d9a3.svg",
     "main.2040154c.css.map": "/shop/static/css/main.2040154c.css.map",
-    "main.11b8edbe.js.map": "/shop/static/js/main.11b8edbe.js.map"
+    "main.a8c37844.js.map": "/shop/static/js/main.a8c37844.js.map"
   },
   "entrypoints": [
     "static/css/main.2040154c.css",
-    "static/js/main.11b8edbe.js"
+    "static/js/main.a8c37844.js"
   ]
 }
