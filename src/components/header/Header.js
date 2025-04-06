@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { useNavigate } from 'react-router-dom'
-import { getAuth, signInWithRedirect, GoogleAuthProvider } from "firebase/auth";
+import { signInWithPopup, signOut} from "firebase/auth";
 import { useAuthState } from 'react-firebase-hooks/auth';
 
 import logo from '../../images/ninja-logo.svg';
@@ -8,45 +8,25 @@ import heart from '../../images/heart.svg';
 import people from '../../images/people.svg';
 import { useDispatch, useSelector } from 'react-redux';
 import "./Header.css";
-import {login, logout, selectUser } from '../../features/user/userSlice';
+import {logout, selectUser } from '../../features/user/userSlice';
 import Nav from '../nav/Nav';
+import { auth, provider } from '../../firebase';
 
 function Header() {
 
     const userActive = useSelector(selectUser);
-    const auth = getAuth();
-    const provider = new GoogleAuthProvider();
-
-    let [user] = useAuthState(auth);
-
+    const [user] = useAuthState(auth); 
     const history = useNavigate();
     const dispatch = useDispatch();
 
     const signIn = () => {
-        if(userActive) {
-            dispatch(logout())
+        if (userActive) {
+            dispatch(logout());
+            signOut(auth); 
         } else {
-            signInWithRedirect(auth, provider).catch((error) => 
-            alert(error.message))
-        } 
-    }
-
-    useEffect(() => {
-        const unsubscribe = auth.onAuthStateChanged((userAuth) => {
-          if(userAuth) {
-            dispatch(
-                login({
-                    uid: userAuth.uid,
-                    email: userAuth.email
-                }))
-          } else {
-            // Logged out
-            dispatch(logout())
-          }
-        })
-        return unsubscribe;
-      }, [dispatch, auth])
-    
+            signInWithPopup(auth, provider).catch((error) => alert(error.message));
+        }
+    };
 
     return (
         <header className="header container-fluid">
