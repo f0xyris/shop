@@ -1,20 +1,20 @@
 import React from 'react'
 import './Nav.css'
 
-import { useHistory } from 'react-router';
+import { useNavigate } from 'react-router';
 
 function Nav() {
 
-    const history = useHistory();
+    const history = useNavigate();
 
     return (
         <div className="nav">
             <ul className="nav__items">
-                <li onClick={() => history.push("/")}>Home</li>
-                <li onClick={() => history.push("/menu")}>Menu</li>
-                <li onClick={() => history.push("/delivery")}>Delivery</li>
-                <li onClick={() => history.push("/customers")}>For customers</li>
-                <li onClick={() => history.push("/news")}>News</li>
+                <li onClick={() => history("/")}>Home</li>
+                <li onClick={() => history("/menu")}>Menu</li>
+                <li onClick={() => history("/delivery")}>Delivery</li>
+                <li onClick={() => history("/customers")}>For customers</li>
+                <li onClick={() => history("/news")}>News</li>
             </ul>
         </div>
     )

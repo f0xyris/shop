@@ -11,11 +11,24 @@ function Sortbar() {
     const dispatch = useDispatch()
 
     const sortItem = useCallback((sItem) => {
-            const classicRolls = products.filter(item => item.type === sItem.toLowerCase())
-            dispatch(
-                toggleSortedItem(classicRolls)
-            )
+        let sortedItems = [];
+
+        if(sItem === 'All' && products.type) {
+            sortedItems = products;
+        } else {
+            sortedItems = products.filter(item => item.type === sItem.toLowerCase());
+        }
+
+        sortedItems = sortedItems.filter((value, index, self) =>
+            index === self.findIndex((t) => (
+                t.id === value.id
+            ))
+        );
+
+        dispatch(toggleSortedItem(sortedItems))
+
     }, [products , dispatch])
+
 
     const sortedItems = state.map((item) => {
         return <li key = {item} onClick = {() => sortItem(item)}>{item}</li>

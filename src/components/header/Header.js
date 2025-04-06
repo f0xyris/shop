@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
-import { useHistory } from 'react-router-dom'
-import auth, { provider } from '../../firebase';
+import { useNavigate } from 'react-router-dom'
+import { getAuth, signInWithRedirect, GoogleAuthProvider } from "firebase/auth";
 import { useAuthState } from 'react-firebase-hooks/auth';
 
 import logo from '../../images/ninja-logo.svg';
@@ -14,16 +14,19 @@ import Nav from '../nav/Nav';
 function Header() {
 
     const userActive = useSelector(selectUser);
+    const auth = getAuth();
+    const provider = new GoogleAuthProvider();
+
     let [user] = useAuthState(auth);
 
-    const history = useHistory();
+    const history = useNavigate();
     const dispatch = useDispatch();
 
     const signIn = () => {
         if(userActive) {
             dispatch(logout())
         } else {
-            auth.signInWithRedirect(provider).catch((error) => 
+            signInWithRedirect(auth, provider).catch((error) => 
             alert(error.message))
         } 
     }
@@ -42,17 +45,17 @@ function Header() {
           }
         })
         return unsubscribe;
-      }, [dispatch])
+      }, [dispatch, auth])
     
 
     return (
         <header className="header container-fluid">
-            <img onClick={() => history.push('/')} className="header__logo" src={logo} alt="logo"/>
+            <img onClick={() => history('/')} className="header__logo" src={logo} alt="logo"/>
             <Nav />
             <div className="header__right">
-                <div className="header__favorites">
+                <div className="header__favorites" onClick={() => history('/favorites')}>
                     <img src={heart} alt="heart"/>
-                    <span onClick={() => history.push('/favorites')}>Favorites</span>
+                    <span>Favorites</span>
                 </div>
                 <div onClick={signIn} className="header__login">
                     <img src={people} alt="people"/>

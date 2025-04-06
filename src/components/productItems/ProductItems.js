@@ -1,10 +1,10 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import Button from '../button/Button'
 import Slider from "react-slick";
-import { db } from '../../firebase'
-import { useHistory } from 'react-router-dom';
+import { db } from '../../firebase';
+import { collection, getDocs, doc, onSnapshot } from 'firebase/firestore';
+import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { useCollection } from 'react-firebase-hooks/firestore';
 import { add, del, showFavorites } from '../../features/fav/favSlice';
 import { addToCart, addProducts } from '../../features/cart/cartSlice';
 import {showSortedItems} from '../../features/sort/sortSlice'
@@ -19,12 +19,28 @@ function ProductItems ({collectionName, activeSlider, button, showFavs, hideTitl
 
     const favItem = useSelector(showFavorites)
     const sortedItems = useSelector(showSortedItems)
-    console.log(sortedItems);
 
-    const [collItems] = useCollection(db.collection(collectionName))
-
-    const history = useHistory()
+    const history = useNavigate()
     const dispatch = useDispatch()
+
+    const fetchProducts = useCallback(async () => {
+        try {
+          const productsCollection = collection(db, collectionName); 
+          const productsSnapshot = await getDocs(productsCollection); 
+          const productsList = productsSnapshot.docs.map(doc => doc.data()); 
+          setProducts(productsList); 
+        } catch (error) {
+          console.error("Error fetching products: ", error);
+        }
+      }, [collectionName]);
+    
+      useEffect(() => {
+        fetchProducts();
+      }, [fetchProducts]);
+    
+      useEffect(() => {
+        dispatch(addProducts(products));
+      }, [products, dispatch]);
 
     const settings = {
         dots: false,
@@ -59,21 +75,18 @@ function ProductItems ({collectionName, activeSlider, button, showFavs, hideTitl
 
 const toggleFav = useCallback((index) => {
     const addItemIndex = favItem.findIndex(({title}) => title === products[index].title);
-    const itemIndex = collItems.docs[index].id;
+    const itemIndex = products[index].id;
+    const docRef = doc(db, collectionName, itemIndex)
     
     if(addItemIndex < 0) {
-        db.collection(collectionName).doc(itemIndex).update({
-            fav: true
-        })
+        onSnapshot(docRef, { fav: true })
         
         dispatch(
             add(products[index])
             )
             setMounted(!mounted) 
         } else {
-            db.collection(collectionName).doc(itemIndex).update({
-                fav: false
-            })
+            onSnapshot(docRef, { fav: false })
             
             dispatch(
                 del(products[index])
@@ -81,7 +94,7 @@ const toggleFav = useCallback((index) => {
                 setMounted(!mounted)  
             } 
             
-        }, [dispatch, favItem, products,mounted,collItems, collectionName])
+        }, [dispatch, favItem, products,mounted, collectionName])
         
         
         const addToCartList = useCallback((index) => {
@@ -94,10 +107,8 @@ const toggleFav = useCallback((index) => {
             useEffect(() => {
                 
                 const fetchProducts = async () => {
-                    const productsCollection = await db.collection(collectionName).get()
-                    setProducts(productsCollection.docs.map(doc => {
-                        return doc.data()
-                    }))
+                    const querySnapshot = await getDocs(collection(db, collectionName));
+                    setProducts(querySnapshot.docs.map(doc => doc.data()))
                 }
                 
                 fetchProducts()
@@ -126,22 +137,16 @@ const toggleFav = useCallback((index) => {
                 const items = products.map((item, idx) => {
                     return (
                         <div 
-                        className="productItems__item" 
-                        key = {item.title} 
-                        style = {
-                            activeSlider ? {width: 300} : {}
-                        }
+                            className="productItems__item" 
+                            key = {item.title} 
+                            style = {activeSlider ? {width: 300} : {}}
                         >
                         <div className="productItems__image">
                             <img src={item.image} alt={item.title}/>
                             <div className="productItems__fav">
-                                {showFavs ? null :  <span onClick={() => toggleFav(idx)}>
-                                    <i 
-                                    className={`fa fa-heart-o ${item.fav ? 'active' : ''}`} 
-                                    aria-hidden="true"></i>
-                                    
+                                {<span onClick={() => toggleFav(idx)}>
+                                    <i className={`fa fa-heart-o ${favItem.some(fav => fav.title === item.title) ? 'active' : ''}`} aria-hidden="true"></i>
                                 </span>}
-                               
                             </div>
                             {item?.eco ? <div className="productItems__eco">
                                 <span>
@@ -153,7 +158,6 @@ const toggleFav = useCallback((index) => {
                                     <i className="fa fa-fire" aria-hidden="true"></i>
                                 </span>
                             </div> : null}
-                        
                         </div>
                         <div className="productItems__cart">
                             <h4>{item.title}</h4>
@@ -170,8 +174,6 @@ const toggleFav = useCallback((index) => {
                                 <span>{item.price}<small> uah</small></span>
                             </div>
                         </div>
-
-                        
                     </div>
             )
     })
@@ -190,7 +192,7 @@ const toggleFav = useCallback((index) => {
                     button 
                 ? 
                     <Button
-                        action = {() => history.push(`/${collectionName}`)}
+                        action = {() => history(`/${collectionName}`)}
                         type = "orange"
                         title = {`All ${collectionName}`}
                         disabled = {false}

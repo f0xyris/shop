@@ -1,12 +1,12 @@
 import React from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import {BrowserRouter as Router, Switch, Route} from "react-router-dom";
+import {BrowserRouter as Router, Routes, Route} from "react-router-dom";
 import Cart from './components/cart/Cart';
 import Cats from './components/cats/Cats';
 import Footer from './components/footer/Footer';
 import Header from './components/header/Header';
 import Spinner from './components/spinner/Spinner';
-import auth from './firebase';
+import { auth } from './firebase';
 import Drinks from './pages/drinks/Drinks';
 import Favorites from './pages/favorites/Favorites';
 import Home from './pages/home/Home';
@@ -20,56 +20,31 @@ import Sushi from './pages/sushi/Sushi';
 
 function App() {
   let [user, loading] = useAuthState(auth);
+
   return (
     <div className="App">
       {!user || loading 
       ? <Spinner /> 
       : <Router>
           <Header />
-          <div className="d-flex flex-column">
+          <div className="d-flex flex-column main-content">
             <div className="d-flex flex-row">
 
               <Cats />
 
-              <Switch>
+              <Routes>
 
-                <Route exact path="/">
-                  <Home />
-                </Route>
+                <Route path="/" element={<Home />} />
+                <Route path="/rolls" element={<Rolls />} />
+                <Route path="/sushi" element={<Sushi />} />
+                <Route path="/sets" element={<Sets />} />
+                <Route path="/snacks" element={<Snacks />} />
+                <Route path="/drinks" element={<Drinks />} />
+                <Route path="/sauces" element={<Sauces />} />
+                <Route path="/favorites" element={<Favorites />} />
+                <Route path="/menu" element={<Menu />} />
 
-                <Route path="/rolls">
-                  <Rolls />
-                </Route>
-
-                <Route path="/sushi">
-                  <Sushi />
-                </Route>
-
-                <Route path="/sets">
-                  <Sets />
-                </Route>
-
-                <Route path="/snacks">
-                  <Snacks />
-                </Route>
-
-                <Route path="/drinks">
-                  <Drinks />
-                </Route>
-
-                <Route path="/sauces">
-                  <Sauces />
-                </Route>
-
-                <Route path="/favorites">
-                  <Favorites />
-                </Route>
-
-                <Route path="/menu">
-                  <Menu />
-                </Route>
-
-              </Switch>
+              </Routes>
 
               <Cart />
 
@@ -80,6 +55,7 @@ function App() {
       }
       
       {/* Footer */}
+
     </div>
   );
 }

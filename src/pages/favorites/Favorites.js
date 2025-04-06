@@ -6,12 +6,12 @@ function Favorites() {
         <div className="content">
             <h1>Favorites</h1>
             <ProductItems 
-                collectionName = 'drinks'
+                collectionName = 'all'
                 activeSlider = {false}
                 button = {false}
                 showFavs
                 hideTitle
-            />
+                />
         </div>
     )
 }

@@ -38,5 +38,9 @@ body {
   flex: auto;
   width: calc(33% - 24px);
   /* max-width: calc(33% - 24px); */
-  height: 400px;
+  height: 450px;
+}
+
+.main-content {
+  height: 100vh;
 }

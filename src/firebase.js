@@ -1,4 +1,6 @@
-import firebase from 'firebase';
+import { initializeApp } from 'firebase/app';
+import { getAuth, GoogleAuthProvider } from 'firebase/auth';
+import { getFirestore } from 'firebase/firestore';
 
 const firebaseConfig = {
     apiKey: "AIzaSyCS4ToALp3wSibMpFDyVL35mBXAlXfGHCI",
@@ -7,12 +9,14 @@ const firebaseConfig = {
     storageBucket: "shop-4c3fa.appspot.com",
     messagingSenderId: "750266790486",
     appId: "1:750266790486:web:fa12d6e5608189394a41f7"
-  };
-  // Initialize Firebase
-  const firebaseApp = firebase.initializeApp(firebaseConfig);
-  const auth = firebaseApp.auth();
-  export const db = firebaseApp.firestore();
-  export const provider = new firebase.auth.GoogleAuthProvider();
-  export default auth;
+};
 
-               
+// Инициализация Firebase
+const firebaseApp = initializeApp(firebaseConfig);
+
+// Получаем экземпляр auth
+const auth = getAuth(firebaseApp);
+
+export const db = getFirestore(firebaseApp);
+export const provider = new GoogleAuthProvider();
+export { auth };  // Экспортируем auth

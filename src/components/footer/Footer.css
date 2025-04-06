@@ -5,6 +5,8 @@
     width: 79vw;
     font-family: 'AvenirDemi-Regular';
     font-weight: 400;
+    align-items: flex-end;
+    flex: 1;
 }
 
 .footer__nav .nav__items {

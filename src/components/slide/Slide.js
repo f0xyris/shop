@@ -3,11 +3,11 @@ import slide from '../../images/ibm.jpg'
 import Button from '../../components/button/Button'
 
 import './Slide.css'
-import { useHistory } from 'react-router'
+import { useNavigate } from 'react-router'
 
 function Slide() {
     
-    const history = useHistory()
+    const history = useNavigate()
 
     return (
         <div className="slide">
@@ -18,7 +18,7 @@ function Slide() {
                     title = "Order now"
                     type = "action"
                     disabled = {false}
-                    action = {() => history.push('/menu')}
+                    action = {() => history('/menu')}
                 />
             </div>
             <div className="slide__image">
