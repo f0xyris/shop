@@ -14,7 +14,7 @@ function Rolls() {
   const sortParam = searchParams.get("sort") || "All";
 
   return (
-    <div className="content w-[100vw] lg:w-[72vw] xl:w-[68vw]">
+    <div className="content w-[100vw] lg:w-[70vw] xl:w-[68vw]">
       <Sortbar />
       <ProductItems
         collectionName="rolls"

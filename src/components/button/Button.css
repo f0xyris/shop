@@ -20,6 +20,7 @@
     cursor: pointer;
     transition: .3s ease;
     border: none;
+    min-width: 8em;
 }
 
 .button .green {

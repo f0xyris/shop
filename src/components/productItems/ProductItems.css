@@ -1,8 +1,5 @@
 @import "tailwindcss";
 
-.productItems {
-    position: relative;
-}
 .productItems__image {
     width: 100%;
     padding: 0 8px;
@@ -18,10 +15,9 @@
 }
 
 .productItems__item {
-    max-width: 300px;
-    margin-right: 24px;
     height: 100%;
-    padding-bottom: 24px;
+    padding-bottom: 2rem;
+    margin-bottom: 2rem;
     display: flex !important;
     flex-direction: column;
     position: relative;
@@ -165,7 +161,6 @@
 }
 
 .slick-slide > div {
-    margin-right: 24px;
     height: 100%;
 }
 
@@ -175,7 +170,6 @@
     height: 450px;
     margin: 0 auto;
     z-index: 1;
-    padding: 1em 0;
     display: flex;
 }
 
@@ -201,13 +195,13 @@
 }
 
 .slick-prev {
-    top: 5%;
-    right: 11rem;
+    top: 11%;
+    right: 11.5rem;
     left: auto;
 }
 
 .slick-next {
-    top: 5%;
+    top: 11%;
     right: 2rem;
     left: auto; 
 }
@@ -220,6 +214,6 @@
 .productItems > .button {
     position: absolute;
     right: 4rem;
-    top: 1.5%;
+    top: 8%;
     margin-top: 0;
 }

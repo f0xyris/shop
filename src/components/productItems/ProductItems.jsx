@@ -75,6 +75,7 @@ function ProductItems({
         breakpoint: 425,
         settings: {
           slidesToShow: 1,
+          variableWidth: false,
         },
       },
     ],
@@ -154,7 +155,7 @@ function ProductItems({
   const items = finalProducts.map((item, idx) => {
     return (
       <div
-        className="productItems__item w-full sm:w-[45%] md:w-[30%] 2xl:w-[20%]"
+        className="productItems__item w-full sm:w-[45%] md:w-[30%] 2xl:w-[25%] max-w-[18rem]"
         key={item.id || `${item.title}-${idx}`}
         style={activeSlider ? { width: 300 } : {}}
       >
@@ -219,14 +220,14 @@ function ProductItems({
   });
 
   return (
-    <div className="mt-5">
+    <div className="mt-5 relative">
       {hideTitle ? null : (
         <h2 className="-top-7! sm:top-auto! pl-2 uppercase">
           {collectionName}
         </h2>
       )}
       <div
-        className="productItems "
+        className="productItems pt-[3rem]!"
         style={!activeSlider ? { display: "flex" } : {}}
       >
         {button ? (

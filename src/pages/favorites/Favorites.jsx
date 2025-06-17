@@ -3,7 +3,7 @@ import ProductItems from "../../components/productItems/ProductItems";
 
 function Favorites() {
   return (
-    <div className="content w-[100vw] lg:w-[72vw] xl:w-[68vw]">
+    <div className="content w-[100vw] lg:w-[70vw] xl:w-[68vw]">
       <h1>Favorites</h1>
       <ProductItems
         collectionName="allitems"
