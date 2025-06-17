@@ -1,3 +1,5 @@
+@import "tailwindcss";
+
 * {
   margin: 0;
   padding: 0;
@@ -36,8 +38,6 @@ body {
 
 .content .productItems__item {
   flex: auto;
-  width: calc(33% - 24px);
-  /* max-width: calc(33% - 24px); */
   height: 450px;
 }
 

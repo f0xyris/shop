@@ -2,7 +2,7 @@
     position: relative;
     display: flex;
     align-items: center;
-    gap: 30px;
+    gap: 35px;
     padding: 1em 0;
     filter: grayscale(1);
     cursor: pointer;
@@ -16,8 +16,8 @@
     transition: .3s ease;
 }
 .menuItem > img {
-    width: 2vw;
-    height: 2vw;
+    width: 2rem;
+    height: 2rem;
 }
 
 .menuItem > span {

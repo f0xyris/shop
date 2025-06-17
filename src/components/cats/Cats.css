@@ -1,3 +1,5 @@
+@import "tailwindcss";
+
 .cats {
     border-right: 1px solid rgba(0,0,0,.08);
     padding: 0 1.2vw;
@@ -6,12 +8,12 @@
     flex-grow: 1;
     height: 100vh;
     position: fixed;
-    width: 4vw;
     overflow: hidden;
     transition: width .3s ease;
     z-index: 13;
     background-color: #fff;
     padding-top: 80px;
+    padding-left: 1.5em;
 }
 
 .cats:hover {

@@ -19,7 +19,7 @@ function Cats() {
     { title: "sauces", image: sia },
   ];
   return (
-    <div className="cats">
+    <div className="w-[4rem] lg:w-[5rem] cats">
       {menuItems.map((item) => (
         <MenuItem key={item.title} title={item.title} image={item.image} />
       ))}

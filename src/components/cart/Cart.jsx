@@ -54,23 +54,34 @@ export default function Cart() {
       isDisabled = false;
     }
     return (
-      <div key={item.title} className="cart-item">
-        <div className="cart-item__info">
-          <span className="cart-item__title">{item.title}</span>
-          <div className="cart-item__price">
-            <span
-              className="cart-item__minus"
-              onClick={() => decreaseCounter(idx)}
-            ></span>
-            <span className="cart-item__count">{item.count}</span>
-            <span
-              className="cart-item__plus"
-              onClick={() => increaseCounter(idx)}
-            ></span>
+      <div
+        key={item.title}
+        className="cart-item sm:flex-col-reverse xl:flex-row xl:w-[28vw] md:w-[24vw]"
+      >
+        <div className="cart-item__info p-3 lg:items-center">
+          <span className="cart-item__title flex md:justify-center">
+            {item.title}
+          </span>
+          <div className="cart-item__price md:flex-col! gap-2">
+            <div className="flex items-center justify-around w-full">
+              <span
+                className="cart-item__minus"
+                onClick={() => decreaseCounter(idx)}
+              ></span>
+              <span className="cart-item__count">{item.count}</span>
+              <span
+                className="cart-item__plus"
+                onClick={() => increaseCounter(idx)}
+              ></span>
+            </div>
             <span className="cart-info__currency">{item.price} uah</span>
           </div>
         </div>
-        <img src={item.image} alt={item.title} />
+        <img
+          src={item.image}
+          alt={item.title}
+          className="sm:hidden! lg:flex!"
+        />
         <span onClick={() => deleteItem(idx)}>
           <i className="fa fa-times delete" aria-hidden="true"></i>
         </span>
@@ -79,27 +90,29 @@ export default function Cart() {
   });
 
   return (
-    <div className="cart">
-      {Object.keys(cartItems).length > 0 ? (
-        items
-      ) : (
-        <div className="cart__empty">
-          <div className="cart__info">
-            <img src={cart} alt="" />
-            <span>
-              Add a product to cart. Everything is very delicious here
-            </span>
-          </div>
+    <div className="cart hidden lg:w-[30vw] lg:flex xl:w-[32vw]">
+      <div className="cart__scroll">
+        {Object.keys(cartItems).length > 0 ? (
+          items
+        ) : (
+          <div className="cart__empty">
+            <div className="cart__info">
+              <img src={cart} alt="" />
+              <span>
+                Add a product to cart. Everything is very delicious here
+              </span>
+            </div>
 
-          <div className="cart__items">
-            {menuItem.map((item) => (
-              <MenuItem key={item} title={item} />
-            ))}
-          </div>
+            <div className="cart__items">
+              {menuItem.map((item) => (
+                <MenuItem key={item} title={item} />
+              ))}
+            </div>
 
-          <Button title="Order history" type="orange" disabled={false} />
-        </div>
-      )}
+            <Button title="Order history" type="orange" disabled={false} />
+          </div>
+        )}
+      </div>
 
       <div className="cart__order">
         {countSum < minSum ? <p>Minimum order sum {minSum} uah</p> : null}

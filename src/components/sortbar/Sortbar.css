@@ -4,12 +4,13 @@
     justify-content: flex-start;
     padding-bottom: 0;
     margin-bottom: 0;
+    justify-content: space-around;
+    max-width: 30em;
 }
 
 .sort-nav > li {
     list-style-type: none;
     cursor: pointer;
-    padding: 0 3em 0 0;
     position: relative;
     overflow: hidden;
     height: 100%;

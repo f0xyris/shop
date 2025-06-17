@@ -11,7 +11,7 @@ import sia from "../../images/menu/cat6.png";
 
 function Menu() {
   return (
-    <div className="content menu-wrapper">
+    <div className="content menu-wrapper w-[100vw] lg:w-[72vw] xl:w-[68vw]">
       <h1>Menu</h1>
       <div className="menu">
         <MenuItem title="rolls" image={roll} />

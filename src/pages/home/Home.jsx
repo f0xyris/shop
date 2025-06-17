@@ -18,7 +18,7 @@ function Home() {
 
   return (
     <div className="home">
-      <div className="home__content content">
+      <div className="home__content content w-[100vw] lg:w-[72vw] xl:w-[68vw] md:pt-20!">
         <Slide />
         <div className="home__items">
           <SpecialItem

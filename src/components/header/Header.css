@@ -14,26 +14,20 @@
 }
 
 .header__logo {
-    display: flex;
-    object-fit: contain;
     cursor: pointer;
-    
+    height: 100%;
 }  
 
 
 .header__right {
     display: flex;
     justify-content: space-around;
-    gap: 2em;
+    gap: 1.5em;
 }
 .header__favorites,
 .header__login {
     cursor: pointer;
     display: flex;
     align-items: center;
-}
-.header__favorites > img,
-.header__login > img {
-    margin-right: 1em;
 }
 

@@ -7,7 +7,7 @@ function MenuItem({ image, title }) {
 
   return (
     <div onClick={() => history(`/${title}`)} className="menuItem">
-      {image ? <img src={image} alt="" /> : null}
+      {image ? <img src={image} className="flex-shrink-0" alt="" /> : null}
       <span>{title}</span>
     </div>
   );

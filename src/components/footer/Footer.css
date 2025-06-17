@@ -1,11 +1,10 @@
+@import "tailwindcss";
+
 .footer {
-    padding: 5em 5em 2em 7em;
     display: flex;
     justify-content: space-between;
-    width: 79vw;
     font-family: 'AvenirDemi-Regular';
     font-weight: 400;
-    align-items: flex-end;
     flex: 1;
 }
 
@@ -24,14 +23,11 @@
     font-weight: 400;
     color: rgba(0,0,0,.4);
     line-height: 1.43;
-    margin-bottom: 1em;
 }
 
 .footer__info {
     display: flex;
     flex-direction: column;
-    gap: 2em;
-    max-width: 200px;
 }
 
 .footer__info > h5 {
@@ -41,7 +37,6 @@
 
 .footer__nav .nav {
     height: auto;
-    margin-top: 1em;
 }
 
 .footer__nav .nav__items > li:after {
@@ -49,7 +44,6 @@
 }
 
 .footer__checkout {
-    display: flex;
     flex-direction: column;
 }
 
@@ -68,7 +62,6 @@
 }
 
 .footer__work {
-    display: flex;
     flex-direction: column;
 }
 

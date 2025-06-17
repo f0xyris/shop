@@ -13,16 +13,12 @@ function Rolls() {
 
   const sortParam = searchParams.get("sort") || "All";
 
-  useEffect(() => {
-    // Removed log for displaying sorted items
-  }, [sortParam, sortedItems]);
-
   return (
-    <div className="content">
+    <div className="content w-[100vw] lg:w-[72vw] xl:w-[68vw]">
       <Sortbar />
       <ProductItems
         collectionName="rolls"
-        items={sortedItems} // Pass sorted items to ProductItems
+        items={sortedItems}
         activeSlider={false}
         button={false}
       />

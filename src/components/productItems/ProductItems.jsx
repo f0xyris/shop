@@ -54,8 +54,8 @@ function ProductItems({
     dots: false,
     speed: 500,
     arrows: true,
-    slidesToShow: 3,
     slidesToScroll: 1,
+    slidesToShow: 1,
     variableWidth: true,
     infinite: true,
     responsive: [
@@ -66,13 +66,13 @@ function ProductItems({
         },
       },
       {
-        breakpoint: 600,
+        breakpoint: 1024,
         settings: {
           slidesToShow: 2,
         },
       },
       {
-        breakpoint: 480,
+        breakpoint: 425,
         settings: {
           slidesToShow: 1,
         },
@@ -154,12 +154,16 @@ function ProductItems({
   const items = finalProducts.map((item, idx) => {
     return (
       <div
-        className="productItems__item"
+        className="productItems__item w-full sm:w-[45%] md:w-[30%] 2xl:w-[20%]"
         key={item.id || `${item.title}-${idx}`}
         style={activeSlider ? { width: 300 } : {}}
       >
         <div className="productItems__image">
-          <img src={item.image} alt={item.title} />
+          <img
+            src={item.image}
+            alt={item.title}
+            className="sm:object-contain! xl:object-cover!"
+          />
           <div className="productItems__fav">
             {
               <span onClick={() => toggleFav(idx)}>
@@ -204,7 +208,7 @@ function ProductItems({
               disabled={false}
               action={() => addToCartList(idx)}
             />
-            <span>
+            <span className="text-xl lg:text-2xl">
               {item.price}
               <small> uah</small>
             </span>
@@ -215,22 +219,27 @@ function ProductItems({
   });
 
   return (
-    <div
-      className="productItems"
-      style={!activeSlider ? { display: "flex" } : {}}
-    >
-      {hideTitle ? null : <h2>{collectionName}</h2>}
+    <div className="mt-5">
+      {hideTitle ? null : (
+        <h2 className="-top-7! sm:top-auto! pl-2 uppercase">
+          {collectionName}
+        </h2>
+      )}
+      <div
+        className="productItems "
+        style={!activeSlider ? { display: "flex" } : {}}
+      >
+        {button ? (
+          <Button
+            action={() => history(`/${collectionName}`)}
+            type="orange"
+            title={`All ${collectionName}`}
+            disabled={false}
+          />
+        ) : null}
 
-      {button ? (
-        <Button
-          action={() => history(`/${collectionName}`)}
-          type="orange"
-          title={`All ${collectionName}`}
-          disabled={false}
-        />
-      ) : null}
-
-      {activeSlider ? <Slider {...settings}> {items} </Slider> : items}
+        {activeSlider ? <Slider {...settings}> {items} </Slider> : items}
+      </div>
     </div>
   );
 }
