@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import "./Sortbar.css";
 import { useDispatch, useSelector } from "react-redux";
 import { showAllProducts } from "../../features/cart/cartSlice";
@@ -30,10 +30,22 @@ function Sortbar() {
       );
 
       dispatch(toggleSortedItem(sortedItems));
-      navigate(`/rolls?sort=${sItem}`);
+      navigate(`/rolls?sort=${sItem}`, { replace: true });
     },
     [products, dispatch, navigate]
   );
+
+  const location = window.location;
+  const queryParams = new URLSearchParams(location.search);
+  const currentSort = queryParams.get("sort");
+
+  useEffect(() => {
+    if (!currentSort) {
+      sortItem("All");
+    } else {
+      sortItem(currentSort);
+    }
+  }, [currentSort, sortItem]);
 
   const sortedItems = state.map((item) => {
     return (

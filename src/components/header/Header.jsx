@@ -30,7 +30,7 @@ function Header() {
   };
 
   return (
-    <header className="header container-fluid">
+    <header className="header container-fluid px-[.6rem]">
       <span className="w-[3rem] h-full lg:w-[14rem]">
         <img
           onClick={() => history("/")}

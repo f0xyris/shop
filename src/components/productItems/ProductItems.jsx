@@ -2,7 +2,14 @@ import React, { useCallback, useEffect, useState } from "react";
 import Button from "../button/Button";
 import Slider from "react-slick";
 import { db } from "../../firebase";
-import { collection, getDocs, doc, onSnapshot } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  getDoc,
+  doc,
+  updateDoc,
+  setDoc,
+} from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { add, del, showFavorites } from "../../features/fav/favSlice";
@@ -82,38 +89,39 @@ function ProductItems({
   };
 
   const toggleFav = useCallback(
-    (index) => {
-      const addItemIndex = favItem.findIndex(
-        ({ title }) => title === products[index].title
-      );
-      const itemIndex = products[index].id;
-      const docRef = doc(db, collectionName, itemIndex);
+    async (item) => {
+      if (!item || !item.id) {
+        console.warn("Invalid product:", item);
+        return;
+      }
 
-      if (addItemIndex < 0) {
-        onSnapshot(docRef, { fav: true });
+      const isFav = favItem.some(({ title }) => title === item.title);
+      const docRef = doc(db, collectionName, item.id);
 
-        dispatch(add(products[index]));
-        setMounted(!mounted);
-      } else {
-        onSnapshot(docRef, { fav: false });
+      try {
+        const docSnap = await getDoc(docRef);
 
-        dispatch(del(products[index]));
-        setMounted(!mounted);
+        if (!docSnap.exists()) {
+          await setDoc(docRef, { ...item, fav: !isFav });
+        } else {
+          await updateDoc(docRef, { fav: !isFav });
+        }
+
+        dispatch(isFav ? del(item) : add(item));
+        setMounted((prev) => !prev);
+      } catch (error) {
+        console.error("Ошибка при обновлении fav:", error);
       }
     },
-    [dispatch, favItem, products, mounted, collectionName]
+    [dispatch, favItem, collectionName]
   );
 
   const addToCartList = useCallback(
-    (index) => {
-      dispatch(addToCart(products[index]));
+    (item) => {
+      dispatch(addToCart(item));
     },
-    [dispatch, products]
+    [dispatch]
   );
-
-  useEffect(() => {
-    dispatch(addProducts(products));
-  }, [products, dispatch]);
 
   const truncate = (string, n) => {
     return string?.length > n ? string.substr(0, n - 1) + "..." : string;
@@ -156,7 +164,7 @@ function ProductItems({
     return (
       <div
         className="productItems__item w-full sm:w-[45%] md:w-[30%] 2xl:w-[25%] max-w-[18rem]"
-        key={item.id || `${item.title}-${idx}`}
+        key={`${item.title}-${idx}`}
         style={activeSlider ? { width: 300 } : {}}
       >
         <div className="productItems__image">
@@ -167,7 +175,7 @@ function ProductItems({
           />
           <div className="productItems__fav">
             {
-              <span onClick={() => toggleFav(idx)}>
+              <span onClick={() => toggleFav(item)}>
                 <i
                   className={`fa fa-heart-o ${
                     favItem.some((fav) => fav.title === item.title)
@@ -207,7 +215,7 @@ function ProductItems({
               title="Add to cart"
               type="green"
               disabled={false}
-              action={() => addToCartList(idx)}
+              action={() => addToCartList(item)}
             />
             <span className="text-xl lg:text-2xl">
               {item.price}
