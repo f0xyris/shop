@@ -11,6 +11,7 @@ export const cartSlice = createSlice({
   initialState: {
     cartItems: initialCart,
     productItems: initialProducts,
+    isOpen: false,
   },
   reducers: {
     addToCart: (state, { payload }) => {
@@ -110,13 +111,21 @@ export const cartSlice = createSlice({
         return state.productItems.push(item);
       });
     },
+    toggleCart: (state, action) => {
+      if (typeof action.payload === "boolean") {
+        state.isOpen = action.payload;
+      } else {
+        state.isOpen = !state.isOpen;
+      }
+    },
   },
 });
 
-export const { addToCart, delFromCart, delCounter, addProducts } =
+export const { addToCart, delFromCart, delCounter, addProducts, toggleCart } =
   cartSlice.actions;
 
 export const showCartItems = (state) => state.cartItems.cartItems;
 export const showAllProducts = (state) => state.cartItems.productItems;
+export const isCartOpened = (state) => state.cartItems.isOpen;
 
 export default cartSlice.reducer;

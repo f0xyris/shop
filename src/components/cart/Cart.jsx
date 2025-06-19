@@ -1,11 +1,15 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import MenuItem from "../menuItem/MenuItem";
 import "./Cart.css";
 import cart from "../../images/cart.svg";
 import Button from "../button/Button";
 
 import { useDispatch, useSelector } from "react-redux";
-import { showCartItems } from "../../features/cart/cartSlice";
+import {
+  showCartItems,
+  isCartOpened,
+  toggleCart,
+} from "../../features/cart/cartSlice";
 import {
   delFromCart,
   addToCart,
@@ -19,6 +23,8 @@ export default function Cart() {
   const menuItem = ["rolls", "sushi", "sets", "snacks", "drinks", "sauces"];
 
   const cartItems = useSelector(showCartItems);
+  const isOpen = useSelector(isCartOpened);
+
   const dispatch = useDispatch();
   const increaseCounter = useCallback(
     (index) => {
@@ -47,6 +53,33 @@ export default function Cart() {
     [dispatch, cartItems]
   );
 
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth > 1024) {
+        dispatch(toggleCart(false));
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    handleResize();
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (isOpen) {
+      document.body.classList.add("overflow-hidden");
+    } else {
+      document.body.classList.remove("overflow-hidden");
+    }
+
+    return () => {
+      document.body.classList.remove("overflow-hidden");
+    };
+  }, [isOpen]);
+
   const items = cartItems.map((item, idx) => {
     countSum += parseInt(item.price);
 
@@ -56,13 +89,13 @@ export default function Cart() {
     return (
       <div
         key={item.title}
-        className="cart-item sm:flex-col-reverse xl:flex-row xl:w-[28vw] md:w-[24vw]"
+        className="cart-item lg:flex-col-reverse xl:flex-row xl:w-[28vw] md:w-[24vw]"
       >
-        <div className="cart-item__info p-3 lg:items-center">
+        <div className="cart-item__info p-1 md:p-3 lg:items-center text-black">
           <span className="cart-item__title flex md:justify-center">
             {item.title}
           </span>
-          <div className="cart-item__price md:flex-col! gap-2">
+          <div className="cart-item__price md:flex-col! gap-2 w-[10rem] md:w-[13rem]">
             <div className="flex items-center justify-around w-full">
               <span
                 className="cart-item__minus"
@@ -77,11 +110,7 @@ export default function Cart() {
             <span className="cart-info__currency">{item.price} uah</span>
           </div>
         </div>
-        <img
-          src={item.image}
-          alt={item.title}
-          className="sm:hidden! lg:flex!"
-        />
+        <img src={item.image} alt={item.title} />
         <span onClick={() => deleteItem(idx)}>
           <i className="fa fa-times delete" aria-hidden="true"></i>
         </span>
@@ -90,8 +119,14 @@ export default function Cart() {
   });
 
   return (
-    <div className="cart hidden lg:w-[30vw] lg:flex xl:w-[32vw]">
-      <div className="cart__scroll">
+    <div
+      className={`cart md:justify-start md:items-start lg:justify-center lg:items-center lg:w-[30vw] lg:flex xl:w-[32vw] md:h-full ${
+        isOpen
+          ? "flex fixed left-0 right-0 top-[4rem] z-20! bg-amber-700 text-white fullscreen-under-header"
+          : "hidden"
+      }`}
+    >
+      <div className="cart__scroll flex-col items-center md:pt-[2rem]! md:flex-row md:justify-around md:flex-wrap md:items-start lg:flex-row lg:justify-center lg:items-center max-h-[calc(100vh-9rem)]">
         {Object.keys(cartItems).length > 0 ? (
           items
         ) : (
