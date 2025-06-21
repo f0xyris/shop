@@ -23,10 +23,11 @@
 .header__right {
     display: flex;
     justify-content: space-around;
-    gap: 1.5em;
 }
 .header__favorites,
-.header__login {
+.header__login,
+.header__cart,
+.header__menu {
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -39,6 +40,42 @@
 
 .fade-slide-out {
   animation: fadeSlideOut 0.5s forwards;
+}
+
+.cart__count {
+  position: absolute;
+  top: -0.35em;
+  left: 60%;
+  margin-left: 0.2em;
+  min-width: 1.6em;
+  height: 1.6em;
+  padding: 0 0.3em;
+  font-size: 0.65em;
+  background-color: white;
+  border-radius: 9999px;
+  border: 2px solid rgb(238, 99, 68);
+  color: rgb(238, 99, 68);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1.6;
+  font-weight: 600;
+  transform: translateY(0.5px);
+  pointer-events: none;
+  white-space: nowrap;
+  animation: bounce-badge .8s infinite;
+}
+
+@keyframes bounce-badge {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  30% {
+    transform: translateY(-2px);
+  }
+  60% {
+    transform: translateY(1px);
+  }
 }
 
 @keyframes fadeSlideIn {

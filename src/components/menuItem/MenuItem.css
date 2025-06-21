@@ -1,3 +1,5 @@
+@import "tailwindcss";
+
 .menuItem {
     position: relative;
     display: flex;
@@ -21,7 +23,6 @@
 }
 
 .menuItem > span {
-    color: rgba(0,0,0,.64);
     text-transform: capitalize;
     font-weight: bold;
     font-size: 14px;

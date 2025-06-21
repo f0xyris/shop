@@ -126,14 +126,18 @@ export default function Cart() {
           : "hidden"
       }`}
     >
-      <div className="cart__scroll flex-col items-center md:pt-[2rem]! md:flex-row md:justify-around md:flex-wrap md:items-start lg:flex-row lg:justify-center lg:items-center max-h-[calc(100vh-9rem)]">
+      <div className="cart__scroll h-full md:h-auto flex-col items-center md:pt-[2rem]! md:flex-row md:justify-around md:flex-wrap md:items-start lg:flex-row lg:justify-center lg:items-center max-h-[calc(100vh-9rem)]">
         {Object.keys(cartItems).length > 0 ? (
           items
         ) : (
-          <div className="cart__empty">
-            <div className="cart__info">
-              <img src={cart} alt="" />
-              <span>
+          <div className="cart__empty h-full flex flex-col justify-center max-w-[25rem] md:max-w-auto">
+            <div className="cart__info text-white lg:text-black justify-center">
+              <img
+                src={cart}
+                alt=""
+                className="filter invert-100 brightness-0 lg:invert-0 lg:brightness-100"
+              />
+              <span className="text-amber-50 lg:text-gray-700">
                 Add a product to cart. Everything is very delicious here
               </span>
             </div>

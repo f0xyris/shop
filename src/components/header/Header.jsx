@@ -4,21 +4,24 @@ import { signInWithPopup, signOut } from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
 
 import logo from "../../images/ninja-logo.svg";
-import heart from "../../images/heart.svg";
-import people from "../../images/people.svg";
 import { useDispatch, useSelector } from "react-redux";
 import "./Header.css";
 import { logout, selectUser } from "../../features/user/userSlice";
 import Nav from "../nav/Nav";
 import { auth, provider } from "../../firebase";
-import { FaCartArrowDown } from "react-icons/fa";
+import { IoCart } from "react-icons/io5";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { IoMdClose } from "react-icons/io";
-import { toggleCart } from "../../features/cart/cartSlice";
+import { MdOutlineLogin } from "react-icons/md";
+import { FaUser } from "react-icons/fa";
+import { FaRegHeart } from "react-icons/fa";
+import { IoCartOutline } from "react-icons/io5";
+import { toggleCart, showCartItems } from "../../features/cart/cartSlice";
 
 function Header() {
   const [isActive, setIsActive] = useState(false);
   const userActive = useSelector(selectUser);
+  const isCartEmpty = useSelector(showCartItems);
   const [user] = useAuthState(auth);
   const history = useNavigate();
   const dispatch = useDispatch();
@@ -49,6 +52,8 @@ function Header() {
     } else {
       signInWithPopup(auth, provider).catch((error) => alert(error.message));
     }
+
+    dispatch(toggleCart(false));
   };
 
   return (
@@ -64,7 +69,7 @@ function Header() {
       <div
         className={`hidden md:flex ${
           isActive
-            ? "w-full bg-amber-700 text-white absolute left-16 right-0 bottom-[22rem] top-[4.2rem] min-h-screen fade-slide-in"
+            ? "w-full bg-amber-700 text-white absolute left-0 right-0 bottom-[22rem] top-0 min-h-screen fade-slide-in"
             : "fade-slide-out"
         }`}
       >
@@ -73,35 +78,58 @@ function Header() {
       <div className="header__right items-center gap-4">
         <div
           className="header__favorites"
-          onClick={() => history("/favorites")}
+          onClick={() => {
+            dispatch(toggleCart(false));
+            history("/favorites");
+          }}
         >
-          <img src={heart} alt="heart" />
-          <span className="hidden lg:block">Favorites</span>
+          <FaRegHeart className="size-6.5 fill-[rgb(238_99_68)]" />
+          <span className="hidden lg:block md:pl-2!">Favorites</span>
         </div>
         <div onClick={signIn} className="header__login">
-          <img src={people} alt="people" />
+          {" "}
           {userActive ? (
-            <span className="hidden lg:block">{user.displayName}</span>
+            <FaUser className="size-6 fill-[rgb(238_99_68)]" />
           ) : (
-            <span>Log in</span>
+            <MdOutlineLogin className="size-6.5 fill-[rgb(238_99_68)]" />
+          )}
+          {userActive ? (
+            <span className="hidden lg:block md:pl-2! max-w-[5rem] leading-4">
+              {user.displayName}
+            </span>
+          ) : (
+            <span className="hidden lg:block md:pl-2!">Log in</span>
           )}
         </div>
-        <div className="lg:hidden">
-          <FaCartArrowDown
-            className="size-6.5 fill-[rgb(238_99_68)]"
-            onClick={() => dispatch(toggleCart())}
-          />
+        <div className="lg:hidden header__cart">
+          {isCartEmpty.length > 0 ? (
+            <div className="relative">
+              <IoCart
+                className="size-7.5 fill-[rgb(238_99_68)] "
+                onClick={() => dispatch(toggleCart())}
+              />
+              <span className="cart__count">{isCartEmpty.length}</span>
+            </div>
+          ) : (
+            <IoCartOutline
+              className="size-7.5 stroke-[rgb(238_99_68)]"
+              onClick={() => dispatch(toggleCart())}
+            />
+          )}
         </div>
-        <div className="md:hidden z-10">
+        <div className="md:hidden z-10 header__menu">
           {isActive ? (
             <IoMdClose
-              className="size-6.5 fill-[rgb(238_99_68)]"
+              className="size-6.5 fill-white"
               onClick={() => onActiveChange()}
             />
           ) : (
             <GiHamburgerMenu
               className="size-6.5 fill-[rgb(238_99_68)]"
-              onClick={() => onActiveChange()}
+              onClick={() => {
+                dispatch(toggleCart(false));
+                onActiveChange();
+              }}
             />
           )}
         </div>
