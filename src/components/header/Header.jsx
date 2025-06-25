@@ -77,7 +77,7 @@ function Header() {
       </div>
       <div className="header__right items-center gap-4">
         <div
-          className="header__favorites"
+          className="flex header__favorites"
           onClick={() => {
             dispatch(toggleCart(false));
             history("/favorites");
@@ -86,7 +86,7 @@ function Header() {
           <FaRegHeart className="size-6.5 fill-[rgb(238_99_68)]" />
           <span className="hidden lg:block md:pl-2!">Favorites</span>
         </div>
-        <div onClick={signIn} className="header__login">
+        <div onClick={signIn} className="flex header__login">
           {" "}
           {userActive ? (
             <FaUser className="size-6 fill-[rgb(238_99_68)]" />
@@ -101,7 +101,7 @@ function Header() {
             <span className="hidden lg:block md:pl-2!">Log in</span>
           )}
         </div>
-        <div className="lg:hidden header__cart">
+        <div className="flex lg:hidden header__cart">
           {isCartEmpty.length > 0 ? (
             <div className="relative">
               <IoCart
@@ -117,7 +117,7 @@ function Header() {
             />
           )}
         </div>
-        <div className="md:hidden z-10 header__menu">
+        <div className="flex md:hidden z-10 header__menu">
           {isActive ? (
             <IoMdClose
               className="size-6.5 fill-white"

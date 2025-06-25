@@ -29,7 +29,6 @@
 .header__cart,
 .header__menu {
     cursor: pointer;
-    display: flex;
     align-items: center;
 }
 
