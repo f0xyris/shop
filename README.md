@@ -38,3 +38,10 @@ SHOP simplifies the development of complex e-commerce platforms by integrating e
 git clone https://github.com/f0xyris/shop
 cd shop
 npm install
+```
+### Usage & Testing
+
+```bash
+npm start
+npm test
+```
