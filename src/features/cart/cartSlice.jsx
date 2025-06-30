@@ -118,11 +118,21 @@ export const cartSlice = createSlice({
         state.isOpen = !state.isOpen;
       }
     },
+    clearCart: (state) => {
+      state.cartItems = [];
+      localStorage.setItem("cartItems", JSON.stringify([]));
+    },
   },
 });
 
-export const { addToCart, delFromCart, delCounter, addProducts, toggleCart } =
-  cartSlice.actions;
+export const {
+  addToCart,
+  delFromCart,
+  delCounter,
+  addProducts,
+  toggleCart,
+  clearCart,
+} = cartSlice.actions;
 
 export const showCartItems = (state) => state.cartItems.cartItems;
 export const showAllProducts = (state) => state.cartItems.productItems;

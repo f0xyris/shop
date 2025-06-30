@@ -3,7 +3,6 @@ import MenuItem from "../menuItem/MenuItem";
 import "./Cart.css";
 import cart from "../../images/cart.svg";
 import Button from "../button/Button";
-
 import { useDispatch, useSelector } from "react-redux";
 import {
   showCartItems,
@@ -15,6 +14,7 @@ import {
   addToCart,
   delCounter,
 } from "../../features/cart/cartSlice";
+import { toggleCheckout } from "../../features/checkout/checkoutSlice";
 
 export default function Cart() {
   const minSum = 400;
@@ -80,6 +80,10 @@ export default function Cart() {
     };
   }, [isOpen]);
 
+  const checkoutOrder = () => {
+    dispatch(toggleCheckout(true));
+  };
+
   const items = cartItems.map((item, idx) => {
     countSum += parseInt(item.price);
 
@@ -130,7 +134,7 @@ export default function Cart() {
         {Object.keys(cartItems).length > 0 ? (
           items
         ) : (
-          <div className="cart__empty h-full flex flex-col justify-center max-w-[25rem] md:max-w-auto">
+          <div className="cart__empty h-[80vh] lg:h-full flex flex-col justify-center max-w-[25rem] md:max-w-auto">
             <div className="cart__info text-white lg:text-black justify-center">
               <img
                 src={cart}
@@ -167,6 +171,7 @@ export default function Cart() {
             title="Checkout"
             type={isDisabled ? "inactive" : "action"}
             disabled={isDisabled}
+            action={() => checkoutOrder()}
           />
         </div>
       </div>

@@ -1,8 +1,9 @@
 import React, { useEffect } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getRedirectResult } from "firebase/auth";
 import { login, logout } from "./features/user/userSlice";
+import { selectIsCheckout } from "./features/checkout/checkoutSlice";
 import {
   BrowserRouter as Router,
   Routes,
@@ -24,10 +25,12 @@ import Sauces from "./pages/sauces/Sauces";
 import Sets from "./pages/sets/Sets";
 import Snacks from "./pages/snacks/Snacks";
 import Sushi from "./pages/sushi/Sushi";
+import { Checkout } from "./components/checkout/Checkout";
 
 function App() {
   const [, loading] = useAuthState(auth);
   const dispatch = useDispatch();
+  const isCheckout = useSelector(selectIsCheckout);
 
   useEffect(() => {
     getRedirectResult(auth)
@@ -62,33 +65,37 @@ function App() {
   }, [dispatch]);
 
   return (
-    <div className="App">
+    <div className="App flex flex-col">
       {loading ? (
         <Spinner />
       ) : (
         <Router>
           <Header />
-          <div className="d-flex flex-column main-content">
-            <div className="d-flex flex-row">
-              <Cats />
+          {isCheckout ? (
+            <Checkout />
+          ) : (
+            <div className="d-flex flex-column main-content">
+              <div className="d-flex flex-row">
+                <Cats />
 
-              <Routes>
-                <Route path="/" element={<Navigate to="/shop" />} />
-                <Route path="/shop" element={<Home />} />
-                <Route path="/rolls" element={<Rolls />} />
-                <Route path="/sushi" element={<Sushi />} />
-                <Route path="/sets" element={<Sets />} />
-                <Route path="/snacks" element={<Snacks />} />
-                <Route path="/drinks" element={<Drinks />} />
-                <Route path="/sauces" element={<Sauces />} />
-                <Route path="/favorites" element={<Favorites />} />
-                <Route path="/menu" element={<Menu />} />
-              </Routes>
+                <Routes>
+                  <Route path="/" element={<Navigate to="/shop" />} />
+                  <Route path="/shop" element={<Home />} />
+                  <Route path="/rolls" element={<Rolls />} />
+                  <Route path="/sushi" element={<Sushi />} />
+                  <Route path="/sets" element={<Sets />} />
+                  <Route path="/snacks" element={<Snacks />} />
+                  <Route path="/drinks" element={<Drinks />} />
+                  <Route path="/sauces" element={<Sauces />} />
+                  <Route path="/favorites" element={<Favorites />} />
+                  <Route path="/menu" element={<Menu />} />
+                </Routes>
 
-              <Cart />
+                <Cart />
+              </div>
+              <Footer />
             </div>
-            <Footer />
-          </div>
+          )}
         </Router>
       )}
 

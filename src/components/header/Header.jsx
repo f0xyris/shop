@@ -73,7 +73,7 @@ function Header() {
             : "fade-slide-out"
         }`}
       >
-        <Nav onActiveChange={onActiveChange} />
+        <Nav onCloseCart={() => dispatch(toggleCart(false))} />
       </div>
       <div className="header__right items-center gap-4">
         <div

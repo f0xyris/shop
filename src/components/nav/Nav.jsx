@@ -3,7 +3,7 @@ import "./Nav.css";
 
 import { useNavigate } from "react-router";
 
-function Nav({ onActiveChange }) {
+function Nav({ onCloseCart }) {
   const history = useNavigate();
 
   return (
@@ -11,7 +11,7 @@ function Nav({ onActiveChange }) {
       <ul className="nav__items flex-col md:flex-row">
         <li
           onClick={() => {
-            onActiveChange();
+            onCloseCart();
             history("/shop");
           }}
         >
@@ -19,7 +19,7 @@ function Nav({ onActiveChange }) {
         </li>
         <li
           onClick={() => {
-            onActiveChange();
+            onCloseCart();
             history("/menu");
           }}
         >
@@ -27,7 +27,7 @@ function Nav({ onActiveChange }) {
         </li>
         <li
           onClick={() => {
-            onActiveChange();
+            onCloseCart();
             history("/delivery");
           }}
         >
@@ -35,7 +35,7 @@ function Nav({ onActiveChange }) {
         </li>
         <li
           onClick={() => {
-            onActiveChange();
+            onCloseCart();
             history("/customers");
           }}
         >
@@ -43,7 +43,7 @@ function Nav({ onActiveChange }) {
         </li>
         <li
           onClick={() => {
-            onActiveChange();
+            onCloseCart();
             history("/news");
           }}
         >

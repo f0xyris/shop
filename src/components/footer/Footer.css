@@ -12,6 +12,7 @@
     flex-direction: column;
     font-family: 'AvenirDemi';
     gap: 3px;
+    align-items: flex-start;
 }
 
 .footer__nav .nav__items > li {

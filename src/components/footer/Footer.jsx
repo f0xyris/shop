@@ -11,10 +11,6 @@ function Footer() {
         <img src={footerImg} alt="footer" className="w-[10rem] h-[100%]" />
         <div className="flex w-full justify-between lg:w-[60vw] items-baseline flex-col sm:flex-row sm:pr-3! py-6! gap-4">
           <div className="flex justify-between w-full pr-3 sm:contents">
-            <div className="footer__nav">
-              <span>Navigation:</span>
-              <Nav />
-            </div>
             <div className="footer__checkout flex-col flex">
               <span>Checkout:</span>
               <a href="tel:+38(099)9648090">+38 (099) 964 80 90</a>
