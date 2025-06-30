@@ -56,7 +56,6 @@ export const Checkout = () => {
         ),
       ]);
 
-      alert("suck my dick");
       reset();
       dispatch(clearCart());
       dispatch(toggleCheckout(false));
