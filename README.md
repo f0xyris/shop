@@ -98,11 +98,11 @@ Product fields supported:
 
 To allow non-admins (e.g., HR) to test without touching live DB, there is a demo mode for the same admin UI:
 
-- Route: `/admin/products?demo=1` (включает общий демо-режим)
-- Демо-режим также включает авто-логин как админ, поэтому можно пользоваться всем сайтом и админкой без реальной авторизации
-- Нет требований к роли/аккаунту
-- Все изменения в админке сохраняются только в браузерном `localStorage` (ключи `demo:{catalog}`) и не попадают в Firebase
-- Загрузка файла сохраняет Data URL для предпросмотра
+- Route: `/admin/products?demo=1` (enables the general demo mode)
+- Demo mode also enables auto-login as admin, so you can use the entire site and admin panel without real authorization
+- No role/account requirements
+- All changes in the admin panel are saved only in the browser's `localStorage` (keys `demo:{catalog}`) and do not go to Firebase
+- File upload saves the Data URL for preview
 
 Tip: Refresh the page to confirm data persists only in your browser. Clear site data to reset.
 
