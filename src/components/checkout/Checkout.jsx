@@ -8,21 +8,41 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
 import emailjs from "emailjs-com";
+import { auth, db } from "../../firebase";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import { httpsCallable, getFunctions } from "firebase/functions";
+import { useEffect } from "react";
+import {
+  fetchZonesByCity,
+  selectZones,
+  selectSelectedZoneId,
+  setSelectedZone,
+  selectDeliveryFee,
+  selectCity,
+} from "../../features/settings/settingsSlice";
 import { toggleCheckout } from "../../features/checkout/checkoutSlice";
 
 export const Checkout = () => {
   const dispatch = useDispatch();
   const cartItems = useSelector(showCartItems);
-  const countSum = cartItems.reduce(
-    (sum, item) => sum + parseInt(item.price),
-    0
-  );
+  const zones = useSelector(selectZones);
+  const selectedZoneId = useSelector(selectSelectedZoneId);
+  const deliveryFee = useSelector(selectDeliveryFee);
+  const city = useSelector(selectCity);
+  const countSum = cartItems.reduce((sum, item) => {
+    const line = Number(item.lineTotal ?? item.price ?? 0);
+    return sum + line;
+  }, 0);
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors },
   } = useForm();
+
+  useEffect(() => {
+    dispatch(fetchZonesByCity(city));
+  }, [city, dispatch]);
 
   const onSubmit = async (data) => {
     const templateParams = {
@@ -33,7 +53,7 @@ export const Checkout = () => {
       address: data.address,
       notes: data.notes || "—",
       order_items: cartItems
-        .map((item) => `${item.title} — ${item.price} UAH`)
+        .map((item) => `${item.title} — ${item.lineTotal ?? item.price} UAH`)
         .join("\n"),
       total: countSum,
     };
@@ -41,6 +61,65 @@ export const Checkout = () => {
     const ownerEmail = "antip4uck.ia@gmail.com";
 
     try {
+      // Persist order to Firestore for authenticated users
+      const user = auth.currentUser;
+      if (user) {
+        const orderPayload = {
+          status: "created",
+          items: cartItems.map((it) => ({
+            id: it.id ?? it.title,
+            title: it.title,
+            image: it.image ?? null,
+            unitPrice: Number(it.unitPrice ?? it.price ?? 0),
+            count: Number(it.count ?? 1),
+            lineTotal: Number(it.lineTotal ?? it.price ?? 0),
+          })),
+          total: countSum + Number(deliveryFee || 0),
+          contact: {
+            name: data.name,
+            phone: data.phone,
+            email: data.email,
+            city: data.city,
+            address: data.address,
+            notes: data.notes || "—",
+          },
+          createdAt: serverTimestamp(),
+          payment: { method: "cod", status: "pending" },
+        };
+        const orderRef = await addDoc(
+          collection(db, "users", user.uid, "orders"),
+          orderPayload
+        );
+        // Optional: start Stripe Checkout
+        const functions = getFunctions();
+        const createCheckoutSession = httpsCallable(
+          functions,
+          "createCheckoutSession"
+        );
+        const resp = await createCheckoutSession({
+          items: orderPayload.items,
+          currency: "uah",
+          successUrl: window.location.origin + "/?paid=1",
+          cancelUrl: window.location.origin + "/?cancel=1",
+        });
+        if (resp?.data?.url) {
+          if (resp?.data?.id) {
+            const { doc, updateDoc } = await import("firebase/firestore");
+            await updateDoc(doc(db, "users", user.uid, "orders", orderRef.id), {
+              payment: {
+                ...(orderPayload.payment || {}),
+                provider: "stripe",
+                status: "pending",
+                sessionId: resp.data.id,
+                checkoutUrl: resp.data.url,
+              },
+            });
+          }
+          window.location.href = resp.data.url;
+          return;
+        }
+      }
+
       await Promise.all([
         emailjs.send(
           "service_bxpbvnl",
@@ -91,9 +170,19 @@ export const Checkout = () => {
             ))}
           </div>
 
-          <div className="flex justify-between pt-4 border-t border-gray-200 text-lg font-bold text-gray-800">
-            <span>Total:</span>
-            <span>{countSum} UAH</span>
+          <div className="pt-4 border-t border-gray-200 text-gray-800">
+            <div className="flex justify-between text-base">
+              <span>Subtotal:</span>
+              <span>{countSum} UAH</span>
+            </div>
+            <div className="flex justify-between text-base">
+              <span>Delivery fee:</span>
+              <span>{Number(deliveryFee || 0)} UAH</span>
+            </div>
+            <div className="flex justify-between text-lg font-bold">
+              <span>Total:</span>
+              <span>{countSum + Number(deliveryFee || 0)} UAH</span>
+            </div>
           </div>
         </div>
 
@@ -187,6 +276,26 @@ export const Checkout = () => {
                 rows="3"
                 {...register("notes")}
               />
+            </div>
+            <div className="sm:col-span-2">
+              <label className="text-sm text-gray-600">Delivery zone</label>
+              <select
+                className="border border-gray-300 rounded-xl px-4 py-2 w-full text-gray-700"
+                value={selectedZoneId ?? ""}
+                onChange={(e) => dispatch(setSelectedZone(e.target.value))}
+              >
+                {zones.length === 0 ? (
+                  <option value="" disabled>
+                    No delivery zones available
+                  </option>
+                ) : null}
+                {zones.map((z) => (
+                  <option key={z.id} value={z.id}>
+                    {z.title} — fee {z.deliveryFee ?? 0} ₴, ETA{" "}
+                    {z.eta ?? "60-90m"}
+                  </option>
+                ))}
+              </select>
             </div>
             <div className="sm:col-span-2 text-right">
               <Button

@@ -1,12 +1,7 @@
-.sort-nav{
-    display: flex;
-    flex: 1;
-    justify-content: flex-start;
-    padding-bottom: 0;
-    margin-bottom: 0;
-    justify-content: space-around;
-    max-width: 30em;
-}
+.sortbar-wrap { display: flex; align-items: center; gap: .5rem; }
+.sortbar-scroll { flex: 1; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.sortbar-scroll::-webkit-scrollbar { display: none; }
+.sort-nav{ display: flex; gap: 1rem; padding: 0; margin: 0; }
 
 .sort-nav > li {
     list-style-type: none;
@@ -14,8 +9,8 @@
     position: relative;
     overflow: hidden;
     height: 100%;
-    display: flex;
-    align-items: flex-start;
+    display: inline-flex;
+    align-items: center;
     margin-top: 1px;
 }
 .sort-nav > li:hover {
@@ -36,4 +31,16 @@
 }
 .sort-nav > li:hover:after {
     left: 0;
+}
+
+/* Mobile dropdown */
+.sortbar-dropdown { display: none; }
+.sortbar-toggle { background: #fff; border: 1px solid #e5e7eb; padding: .4rem .6rem; border-radius: .5rem; }
+.sort-nav-mobile { margin-top: .5rem; display: flex; flex-wrap: wrap; gap: .6rem; padding: 0; }
+.sort-nav-mobile > li { list-style: none; padding: .35rem .6rem; background: #f8f8f8; border-radius: 999px; }
+.sort-nav-mobile > li:hover { color: #ee6344; }
+
+@media (max-width: 640px) {
+  .sortbar-scroll { display: none; }
+  .sortbar-dropdown { display: block; }
 }

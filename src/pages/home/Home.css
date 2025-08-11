@@ -9,9 +9,10 @@
 
 .content {
     color: #000;
-    padding: 6rem 0 3rem 6rem;
+    padding: 6rem 0 3rem 6.5rem;
     z-index: 10;
     transition: .5s ease;
+    width: calc(100vw-3rem);
 }
 
 .home__items {

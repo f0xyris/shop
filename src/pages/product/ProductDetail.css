@@ -1,0 +1,21 @@
+.related-slider .slick-list {
+  margin-left: -4px;
+  margin-right: -4px;
+}
+.related-slider .slick-track {
+  display: flex;
+  align-items: stretch;
+  height: auto;
+}
+.related-slider .slick-slide {
+  height: auto;
+}
+.related-slider .slick-slide > div {
+  height: 100%;
+}
+.related-slider .slick-dots {
+  bottom: -10px;
+}
+.slick-dots li {
+   margin: 0; 
+}

@@ -6,7 +6,7 @@ import Nav from "../nav/Nav";
 
 function Footer() {
   return (
-    <div className="footer items-start flex-col w-[100vw] lg:flex-row lg:items-center lg:w-[79vw] pl-[5rem]! md:pl-[6rem]!">
+    <div className="footer items-start flex-col w-[calc(100vw-3rem)] lg:flex-row lg:items-center lg:w-[79vw] pl-[5rem]! md:pl-[6rem]!">
       <div className="footer__info w-full lg:w-auto">
         <img src={footerImg} alt="footer" className="w-[10rem] h-[100%]" />
         <div className="flex w-full justify-between lg:w-[60vw] items-baseline flex-col sm:flex-row sm:pr-3! py-6! gap-4">

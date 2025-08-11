@@ -1,11 +1,20 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import "./Sortbar.css";
 import { useDispatch, useSelector } from "react-redux";
 import { showAllProducts } from "../../features/cart/cartSlice";
 import { toggleSortedItem } from "../../features/sort/sortSlice";
 import { useNavigate } from "react-router-dom";
 
-const state = ["All", "Classic", "Maki", "Dragons", "Baked", "Felix", "Sweet"];
+const state = [
+  "All",
+  "New",
+  "Classic",
+  "Maki",
+  "Dragons",
+  "Baked",
+  "Felix",
+  "Sweet",
+];
 
 function Sortbar() {
   const dispatch = useDispatch();
@@ -18,6 +27,8 @@ function Sortbar() {
 
       if (sItem === "All") {
         sortedItems = products;
+      } else if (sItem === "New") {
+        sortedItems = products.filter((item) => !!item.isNew);
       } else {
         sortedItems = products.filter(
           (item) => item.type === sItem.toLowerCase()
@@ -47,15 +58,30 @@ function Sortbar() {
     }
   }, [currentSort, sortItem]);
 
-  const sortedItems = state.map((item) => {
-    return (
-      <li key={item} onClick={() => sortItem(item)}>
-        {item}
-      </li>
-    );
-  });
+  const [open, setOpen] = useState(false);
+  const items = useMemo(
+    () =>
+      state.map((item) => (
+        <li key={item} onClick={() => sortItem(item)}>
+          {item}
+        </li>
+      )),
+    [sortItem]
+  );
 
-  return <ul className="sort-nav">{sortedItems}</ul>;
+  return (
+    <div className="sortbar-wrap">
+      <div className="sortbar-scroll">
+        <ul className="sort-nav">{items}</ul>
+      </div>
+      <div className="sortbar-dropdown">
+        <button className="sortbar-toggle" onClick={() => setOpen((v) => !v)}>
+          Filters <span className="fa fa-chevron-down" />
+        </button>
+        {open && <ul className="sort-nav-mobile">{items}</ul>}
+      </div>
+    </div>
+  );
 }
 
 export default Sortbar;

@@ -4,6 +4,7 @@ import favReducer from '../features/fav/favSlice';
 import cartItemsReducer from '../features/cart/cartSlice';
 import sortItemsReducer from '../features/sort/sortSlice';
 import checkoutReducer from '../features/checkout/checkoutSlice';
+import settingsReducer from '../features/settings/settingsSlice';
 
 export default configureStore({
   reducer: {
@@ -11,6 +12,7 @@ export default configureStore({
     fav: favReducer,
     cartItems: cartItemsReducer,
     sortItems: sortItemsReducer,
-    checkout: checkoutReducer
+    checkout: checkoutReducer,
+    settings: settingsReducer,
   },
 });

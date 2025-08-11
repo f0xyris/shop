@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import Button from "../button/Button";
 import Slider from "react-slick";
 import { db } from "../../firebase";
@@ -12,7 +12,13 @@ import {
 } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { add, del, showFavorites } from "../../features/fav/favSlice";
+import {
+  add,
+  del,
+  showFavorites,
+  addFavoriteRemote,
+  deleteFavoriteRemote,
+} from "../../features/fav/favSlice";
 import { addToCart, addProducts } from "../../features/cart/cartSlice";
 import {
   showSortedItems,
@@ -42,7 +48,11 @@ function ProductItems({
     try {
       const productsCollection = collection(db, collectionName);
       const productsSnapshot = await getDocs(productsCollection);
-      const productsList = productsSnapshot.docs.map((doc) => doc.data());
+      const productsList = productsSnapshot.docs.map((productDoc) => ({
+        ...productDoc.data(),
+        id: productDoc.id,
+        collectionName,
+      }));
       setProducts(productsList);
     } catch (error) {
       console.error("Error fetching products: ", error);
@@ -95,19 +105,18 @@ function ProductItems({
         return;
       }
 
-      const isFav = favItem.some(({ title }) => title === item.title);
-      const docRef = doc(db, collectionName, item.id);
+      const keyOf = (x) => x?.id ?? x?.title;
+      const isFav = favItem.some((f) => keyOf(f) === keyOf(item));
 
       try {
-        const docSnap = await getDoc(docRef);
-
-        if (!docSnap.exists()) {
-          await setDoc(docRef, { ...item, fav: !isFav });
-        } else {
-          await updateDoc(docRef, { fav: !isFav });
-        }
-
+        // Local state
         dispatch(isFav ? del(item) : add(item));
+        // Remote per-user favorites
+        if (isFav) {
+          await dispatch(deleteFavoriteRemote(item));
+        } else {
+          await dispatch(addFavoriteRemote(item));
+        }
         setMounted((prev) => !prev);
       } catch (error) {
         console.error("Ошибка при обновлении fav:", error);
@@ -127,38 +136,27 @@ function ProductItems({
     return string?.length > n ? string.substr(0, n - 1) + "..." : string;
   };
 
-  let finalProducts = products || [];
-  if (showFavs) {
-    finalProducts = favItem || [];
-  }
-  if (
-    sortedItems &&
-    Object.keys(sortedItems).length > 0 &&
-    finalProducts !== sortedItems
-  ) {
-    finalProducts = sortedItems;
-  }
+  const finalProducts = useMemo(() => {
+    let list = showFavs ? favItem || [] : products || [];
+    if (sortedItems && Array.isArray(sortedItems) && sortedItems.length > 0) {
+      list = sortedItems;
+    }
+    // de-duplicate by id or title
+    const seen = new Set();
+    list = list.filter((it) => {
+      const key = it.id ?? it.title;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+    return list;
+  }, [products, favItem, sortedItems, collectionName, showFavs]);
 
   useEffect(() => {
     if (hasReset) return;
     dispatch(resetSortedItems());
     setHasReset(true);
-
-    finalProducts = products || [];
-    if (showFavs) {
-      finalProducts = favItem || [];
-    }
-    if (
-      sortedItems &&
-      Object.keys(sortedItems).length > 0 &&
-      finalProducts !== sortedItems
-    ) {
-      finalProducts = sortedItems;
-    }
-    finalProducts = finalProducts.filter(
-      (item) => item.collectionName === collectionName
-    );
-  }, [collectionName, products, sortedItems, favItem, dispatch, hasReset]);
+  }, [dispatch, hasReset]);
 
   const items = finalProducts.map((item, idx) => {
     return (
@@ -171,14 +169,24 @@ function ProductItems({
           <img
             src={item.image}
             alt={item.title}
-            className="sm:object-contain! xl:object-cover!"
+            className="sm:object-contain! xl:object-cover! cursor-pointer"
+            onClick={() =>
+              history(
+                `/product/${encodeURIComponent(
+                  item.collectionName || collectionName
+                )}/${encodeURIComponent(item.id)}`,
+                { state: { prefetch: item } }
+              )
+            }
           />
           <div className="productItems__fav">
             {
               <span onClick={() => toggleFav(item)}>
                 <i
                   className={`fa fa-heart-o ${
-                    favItem.some((fav) => fav.title === item.title)
+                    favItem.some(
+                      (fav) => (fav.id ?? fav.title) === (item.id ?? item.title)
+                    )
                       ? "active"
                       : ""
                   }`}
@@ -187,14 +195,27 @@ function ProductItems({
               </span>
             }
           </div>
+          {item?.isNew || item?.isTop ? (
+            <div className="absolute left-2 top-2 flex flex-col gap-1 z-[1]">
+              {item?.isNew ? (
+                <span className="px-2 py-1 text-[10px] font-semibold uppercase tracking-wide rounded-md bg-emerald-500 text-white shadow">
+                  New
+                </span>
+              ) : null}
+              {item?.isTop ? (
+                <span className="px-2 py-1 text-[10px] font-semibold uppercase tracking-wide rounded-md bg-amber-500 text-white shadow">
+                  Top
+                </span>
+              ) : null}
+            </div>
+          ) : null}
           {item?.eco ? (
             <div className="productItems__eco">
               <span>
                 <i className="fa fa-leaf" aria-hidden="true"></i>
               </span>
             </div>
-          ) : null}
-          {item?.spicy ? (
+          ) : item?.spicy ? (
             <div className="productItems__spicy">
               <span>
                 <i className="fa fa-fire" aria-hidden="true"></i>
@@ -203,13 +224,26 @@ function ProductItems({
           ) : null}
         </div>
         <div className="productItems__cart">
-          <h4>{item.title}</h4>
+          <h4
+            className="cursor-pointer"
+            onClick={() =>
+              history(
+                `/product/${encodeURIComponent(
+                  item.collectionName || collectionName
+                )}/${encodeURIComponent(item.id)}`,
+                { state: { prefetch: item } }
+              )
+            }
+          >
+            {item.title}
+          </h4>
           <div className="productItems__desc">
             <h5>
               <span>{item.weight} g </span>
               {truncate(item.desc, 55)}
             </h5>
           </div>
+          <div className="py-1" />
           <div className="productItems__order">
             <Button
               title="Add to cart"

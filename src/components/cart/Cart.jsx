@@ -15,15 +15,20 @@ import {
   delCounter,
 } from "../../features/cart/cartSlice";
 import { toggleCheckout } from "../../features/checkout/checkoutSlice";
+import { isCartLoading } from "../../features/cart/cartSlice";
+import Spinner from "../spinner/Spinner";
+import { useSelector as useReduxSelector } from "react-redux";
+import { selectMinOrder } from "../../features/settings/settingsSlice";
 
 export default function Cart() {
-  const minSum = 400;
+  const minSum = useReduxSelector(selectMinOrder);
   let countSum = 0;
   let isDisabled = true;
   const menuItem = ["rolls", "sushi", "sets", "snacks", "drinks", "sauces"];
 
   const cartItems = useSelector(showCartItems);
   const isOpen = useSelector(isCartOpened);
+  const loading = useSelector(isCartLoading);
 
   const dispatch = useDispatch();
   const increaseCounter = useCallback(
@@ -85,7 +90,8 @@ export default function Cart() {
   };
 
   const items = cartItems.map((item, idx) => {
-    countSum += parseInt(item.price);
+    const line = Number(item.lineTotal ?? item.price ?? 0);
+    countSum += line;
 
     if (countSum > minSum) {
       isDisabled = false;
@@ -111,7 +117,7 @@ export default function Cart() {
                 onClick={() => increaseCounter(idx)}
               ></span>
             </div>
-            <span className="cart-info__currency">{item.price} uah</span>
+            <span className="cart-info__currency">{line} uah</span>
           </div>
         </div>
         <img src={item.image} alt={item.title} />
@@ -131,7 +137,11 @@ export default function Cart() {
       }`}
     >
       <div className="cart__scroll h-full md:h-auto flex-col items-center md:pt-[2rem]! md:flex-row md:justify-around md:flex-wrap md:items-start lg:flex-row lg:justify-center lg:items-center max-h-[calc(100vh-9rem)]">
-        {Object.keys(cartItems).length > 0 ? (
+        {loading ? (
+          <div className="h-[80vh] flex items-center justify-center w-full">
+            <Spinner />
+          </div>
+        ) : Object.keys(cartItems).length > 0 ? (
           items
         ) : (
           <div className="cart__empty h-[80vh] lg:h-full flex flex-col justify-center max-w-[25rem] md:max-w-auto">
@@ -152,7 +162,15 @@ export default function Cart() {
               ))}
             </div>
 
-            <Button title="Order history" type="orange" disabled={false} />
+            <Button
+              title="Order history"
+              type="orange"
+              disabled={false}
+              action={() => {
+                dispatch(toggleCart(false));
+                window.location.href = "/account/orders";
+              }}
+            />
           </div>
         )}
       </div>

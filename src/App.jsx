@@ -1,15 +1,19 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useDispatch, useSelector } from "react-redux";
 import { getRedirectResult } from "firebase/auth";
-import { login, logout } from "./features/user/userSlice";
-import { selectIsCheckout } from "./features/checkout/checkoutSlice";
+import { login, logout, fetchUserRole } from "./features/user/userSlice";
+import {
+  selectIsCheckout,
+  toggleCheckout,
+} from "./features/checkout/checkoutSlice";
 import {
   BrowserRouter as Router,
   Routes,
   Route,
   Navigate,
 } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import Cart from "./components/cart/Cart";
 import Cats from "./components/cats/Cats";
 import Footer from "./components/footer/Footer";
@@ -26,13 +30,41 @@ import Sets from "./pages/sets/Sets";
 import Snacks from "./pages/snacks/Snacks";
 import Sushi from "./pages/sushi/Sushi";
 import { Checkout } from "./components/checkout/Checkout";
+import Orders from "./pages/account/Orders";
+import Addresses from "./pages/account/Addresses";
+import ProductDetail from "./pages/product/ProductDetail";
+import AdminProducts from "./pages/admin/AdminProducts";
 
 function App() {
   const [, loading] = useAuthState(auth);
   const dispatch = useDispatch();
   const isCheckout = useSelector(selectIsCheckout);
+  const location = useLocation();
+  const demoMode = useMemo(() => {
+    const sp = new URLSearchParams(location.search);
+    const isOn =
+      sp.get("demo") === "1" || localStorage.getItem("demoMode") === "1";
+    if (isOn) {
+      localStorage.setItem("demoMode", "1");
+    }
+    return isOn;
+  }, [location.search]);
 
   useEffect(() => {
+    if (demoMode) {
+      localStorage.setItem("demoMode", "1");
+      dispatch(
+        login({
+          uid: "demo",
+          email: "hr@demo.example",
+          displayName: "Admin Demo",
+          role: "admin",
+        })
+      );
+      // Убедимся, что UI обновится в течение этого цикла
+      return () => {};
+    }
+
     getRedirectResult(auth)
       .then((result) => {
         if (result?.user) {
@@ -43,6 +75,7 @@ function App() {
               displayName: result.user.displayName,
             })
           );
+          dispatch(fetchUserRole(result.user.uid));
         }
       })
       .catch((error) => console.error("Login redirect error:", error));
@@ -56,12 +89,28 @@ function App() {
             displayName: userAuth.displayName,
           })
         );
+        dispatch(fetchUserRole(userAuth.uid));
       } else {
         dispatch(logout());
       }
     });
 
     return unsubscribe;
+  }, [dispatch, demoMode]);
+
+  // Close checkout overlay when route changes
+  useEffect(() => {
+    if (isCheckout) {
+      dispatch(toggleCheckout(false));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.pathname]);
+
+  // Close checkout when custom navigation event fired (from nav)
+  useEffect(() => {
+    const handler = () => dispatch(toggleCheckout(false));
+    document.addEventListener("app:navigate", handler);
+    return () => document.removeEventListener("app:navigate", handler);
   }, [dispatch]);
 
   return (
@@ -69,7 +118,7 @@ function App() {
       {loading ? (
         <Spinner />
       ) : (
-        <Router>
+        <>
           <Header />
           {isCheckout ? (
             <Checkout />
@@ -81,6 +130,10 @@ function App() {
                 <Routes>
                   <Route path="/" element={<Navigate to="/shop" />} />
                   <Route path="/shop" element={<Home />} />
+                  <Route
+                    path="/account"
+                    element={<Navigate to="/account/orders" />}
+                  />
                   <Route path="/rolls" element={<Rolls />} />
                   <Route path="/sushi" element={<Sushi />} />
                   <Route path="/sets" element={<Sets />} />
@@ -89,6 +142,13 @@ function App() {
                   <Route path="/sauces" element={<Sauces />} />
                   <Route path="/favorites" element={<Favorites />} />
                   <Route path="/menu" element={<Menu />} />
+                  <Route path="/account/orders" element={<Orders />} />
+                  <Route path="/account/addresses" element={<Addresses />} />
+                  <Route
+                    path="/product/:collection/:id"
+                    element={<ProductDetail />}
+                  />
+                  <Route path="/admin/products" element={<AdminProducts />} />
                 </Routes>
 
                 <Cart />
@@ -96,7 +156,7 @@ function App() {
               <Footer />
             </div>
           )}
-        </Router>
+        </>
       )}
 
       {/* Footer */}
